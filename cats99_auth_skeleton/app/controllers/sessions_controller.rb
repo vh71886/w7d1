@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
             # render json: 'Credentials are wrong'
             render :new
         else
-            session[:session_token] == @user.reset_session_token!
+            session[:session_token] = @user.reset_session_token!
             redirect_to cats_url
         end
 
@@ -23,7 +23,10 @@ class SessionsController < ApplicationController
     end
     
     def destroy
-
+        @current_user.reset_session_token! if self.current_user
+        session[:session_token] = nil
+        @current_user = nil
+        redirect_to cats_url
     end
     
 end
